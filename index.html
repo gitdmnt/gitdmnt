@@ -1,0 +1,52 @@
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&family=Noto+Serif+JP:wght@600&display=swap');
+        canvas {background: #ffffff; display: block; margin: 0 auto; width: 600;}
+    </style>
+</head>
+<body>
+    <input type = "text" id = "mushoku" value = "無職">
+    <input type = "text" id = "moukaku" value = "もう書くことない">
+    <a id="download" href="#" download="mokushoku.png">ダウンロード</a>
+    <canvas id = "canvas" width="1265" height = "896"></canvas>
+    <script>
+        let canvas = document.getElementById('canvas');
+        let c = canvas.getContext("2d"); 
+        
+        let mushoku = document.getElementById('mushoku').value;
+        let moukaku = document.getElementById('moukaku').value;
+        c.textAlign = 'start';
+
+        setInterval(() => {
+            mushoku = "「" + document.getElementById('mushoku').value;
+            moukaku = "（" + document.getElementById('moukaku').value + "）";
+            let mar_1 = (canvas.width - c.measureText(mushoku + moukaku + "」").width) / 2;
+            let mar_2 = mar_1 + c.measureText(mushoku).width;
+            let mar_3 = mar_2 + c.measureText(moukaku).width;
+            let len = c.measureText(mushoku + moukaku + "」").width;
+            c.fillStyle = '#ffffff';
+            c.fillRect(0, 0, canvas.width, canvas.height);
+            c.fillStyle = '#C1150D';
+            c.fillRect(92, 242, canvas.width - 184, canvas.height - 507);
+            c.fillStyle = '#ffffff';
+            c.fillRect(100, 250, canvas.width - 200, canvas.height - 523);
+            c.fillStyle = '#ffff00';
+            c.fillRect(mar_1, canvas.height / 2 - 36, len, 64);
+            c.fillStyle = '#000000';
+            c.font = '64px Noto Sans JP';
+            c.fillText(mushoku, mar_1, canvas.height / 2 + 20);
+            c.font = '64px Noto Serif JP';
+            c.fillText(moukaku, mar_2, canvas.height / 2 + 20);
+            c.font = '64px Noto Sans JP';
+            c.fillText("」", mar_3, canvas.height / 2 + 20);
+        }, 1);
+        setInterval(() => {
+            f();
+        }, 500);
+        function f() {
+            let base64 = canvas.toDataURL("image/png");
+            document.getElementById("download").href = base64;
+        }
+    </script>
+</body>
