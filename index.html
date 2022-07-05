@@ -1,45 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
 <head>
+    <meta charset="UTF-8">
+    <title>張り紙メーカー</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&family=Noto+Serif+JP:wght@600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&family=Noto+Serif+JP:wght@700&display=swap');
         canvas {background: #ffffff; display: block; margin: 0 auto; width: 600;}
-    </style>
+    </style> 
 </head>
 <body>
-    <input type = "text" id = "mushoku" value = "無職">
-    <input type = "text" id = "moukaku" value = "もう書くことない"
-    <canvas id = "canvas" width="1265" height = "896"></canvas>
+    <p style="font-size:200%"><span style="font-family:'Noto Sans JP'">「張り紙メーカー</span><span style="font-family:'Noto Serif JP'">（ご利用ください）</span><span style="font-family:'Noto Sans JP'">」</span></p>
+    
+    フォントが読み込まれなかった場合は再度「生成」を押してください<br>
+    「<input id="mushoku" value="無職">」（<input id="moukaku" value="もう書くことない">） <a id="download" download="harigami.png">ダウンロード</a><br>
+    <canvas id="canvas" width="4093" height="2894" style="width: 60%"></canvas>
     <script>
-        let canvas = document.getElementById('canvas');
-        let c = canvas.getContext("2d"); 
-        
-        let mushoku = document.getElementById('mushoku').value;
-        let moukaku = document.getElementById('moukaku').value;
-        c.textAlign = 'start';
+        let canvas = document.getElementById("canvas");
+        let c = canvas.getContext("2d");
+        let inputMushoku = document.getElementById("mushoku");
+        let inputMoukaku = document.getElementById("moukaku");
+        c.textAlign    = 'start';
+        c.textBaseline = 'top';
 
-        setInterval(() => {
-            mushoku = "「" + document.getElementById('mushoku').value;
-            moukaku = "（" + document.getElementById('moukaku').value + "）";
-            let mar_1 = (canvas.width - c.measureText(mushoku + moukaku + "」").width) / 2;
-            let mar_2 = mar_1 + c.measureText(mushoku).width;
-            let mar_3 = mar_2 + c.measureText(moukaku).width;
-            let len = c.measureText(mushoku + moukaku + "」").width;
-            c.fillStyle = '#ffffff';
+        
+        const widthOriginal   = 4093;
+        const widthCanvas     = 4093;
+        //const xRedBoxStart    = Math.round( 415 / widthOriginal * widthCanvas);
+        //const xRedBoxEnd      = Math.round(3635 / widthOriginal * widthCanvas);
+        const xRedBoxMargin1  = Math.round( 175 / widthOriginal * widthCanvas);
+        const xRedBoxMargin2  = Math.round( 120 / widthOriginal * widthCanvas);
+        const yRedBoxStart    = Math.round( 930 / widthOriginal * widthCanvas);
+        const yRedBoxEnd      = Math.round(1975 / widthOriginal * widthCanvas);
+        const widthRedBox     = Math.round(  30 / widthOriginal * widthCanvas);
+        const yYellowBoxStart = Math.round(1285 / widthOriginal * widthCanvas);
+        const yYellowBoxEnd   = Math.round(1580 / widthOriginal * widthCanvas);
+        const yTextStart      = Math.round(1340 / widthOriginal * widthCanvas);
+        const fontSize        = Math.round( 210 / 59 * 64  / widthOriginal * widthCanvas);
+        const xTextOffset1    = Math.round(  35 / widthOriginal * widthCanvas);
+        const xTextOffset2    = Math.round(  70 / widthOriginal * widthCanvas);
+        const xTextOffset3    = Math.round(   0 / widthOriginal * widthCanvas);
+        const fontSans        = fontSize + 'px Noto Sans JP';
+        const fontSerif       = fontSize + 'px Noto Serif JP';
+        const colorWhite      = '#FFFFFF';
+        const colorRed        = '#C1150D';
+        const colorYellow     = '#FFFF00';
+        const colorBlack      = '#000000';
+
+
+        c.font = fontSans;
+
+        function render(){
+            let textBracket1 = "「";
+            let textMushoku  =        inputMushoku.value;
+            let textMoukaku  = "（" + inputMoukaku.value + "）";
+            let textBracket2 = "」";
+
+            let widthBracket1 = c.measureText(textBracket1).width;
+            let widthMushoku  = c.measureText(textMushoku).width;
+            let widthMoukaku  = c.measureText(textMoukaku).width;
+            let widthBracket2 = c.measureText(textBracket2).width;
+            let widthAll      = c.measureText(textBracket1 + textMushoku + textMoukaku + textBracket2).width;
+
+            let xStart    = canvas.width / 2 - widthAll / 2 ;
+            let xBracket1 = xStart;
+            let xMushoku  = xBracket1 + widthBracket1;
+            let xMoukaku  = xMushoku  + widthMushoku;
+            let xBracket2 = xMoukaku  + widthMoukaku;
+
+            c.fillStyle = colorWhite;
             c.fillRect(0, 0, canvas.width, canvas.height);
-            c.fillStyle = '#C1150D';
-            c.fillRect(92, 242, canvas.width - 184, canvas.height - 507);
-            c.fillStyle = '#ffffff';
-            c.fillRect(100, 250, canvas.width - 200, canvas.height - 523);
-            c.fillStyle = '#ffff00';
-            c.fillRect(mar_1, canvas.height / 2 - 36, len, 64);
-            c.fillStyle = '#000000';
-            c.font = '64px Noto Sans JP';
-            c.fillText(mushoku, mar_1, canvas.height / 2 + 20);
-            c.font = '64px Noto Serif JP';
-            c.fillText(moukaku, mar_2, canvas.height / 2 + 20);
-            c.font = '64px Noto Sans JP';
-            c.fillText("」", mar_3, canvas.height / 2 + 20);
-        }, 1);
+
+            c.strokeStyle = colorRed;
+            c.lineWidth   = widthRedBox;
+            c.strokeRect(xStart - xRedBoxMargin1, yRedBoxStart, (xStart + widthAll + xRedBoxMargin2) - (xStart - xRedBoxMargin1), yRedBoxEnd - yRedBoxStart);
+
+            c.fillStyle = colorYellow;
+            c.fillRect(xStart, yYellowBoxStart, widthAll, yYellowBoxEnd - yYellowBoxStart);
+
+            c.fillStyle = colorBlack;
+            c.font = fontSerif;
+            c.fillText(textBracket1, xBracket1 + xTextOffset1, yTextStart);
+            c.font = fontSans;
+            c.fillText(textMushoku , xMushoku  + xTextOffset1, yTextStart);
+            c.font = fontSerif;
+            c.fillText(textMoukaku , xMoukaku  + xTextOffset2, yTextStart);
+            c.fillText(textBracket2, xBracket2 + xTextOffset3, yTextStart);
+        }
+        document.getElementById("generate").oninput = render;
+
         setInterval(() => {
             f();
         }, 500);
@@ -47,5 +95,12 @@
             let base64 = canvas.toDataURL("image/png");
             document.getElementById("download").href = base64;
         }
+
+        let loop = () => {
+                render();
+                requestAnimationFrame(loop);
+            };
+        loop();
     </script>
 </body>
+</html>
