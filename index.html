@@ -88,7 +88,7 @@
 
         setInterval(() => {
             f();
-        }, 500);
+        }, 1000);
         function f() {
             let base64 = canvas.toDataURL("image/png");
             document.getElementById("download").href = base64;
