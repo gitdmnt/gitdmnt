@@ -6,12 +6,13 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&family=Noto+Serif+JP:wght@700&display=swap');
         canvas {background: #ffffff; display: block; margin: 0 auto; width: 600;}
-    </style> 
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <p style="font-size:200%"><span style="font-family:'Noto Sans JP'">「張り紙メーカー</span><span style="font-family:'Noto Serif JP'">（ご利用ください）</span><span style="font-family:'Noto Sans JP'">」</span></p>
     
-    「<input id="mushoku" value="無職">」（<input id="moukaku" value="もう書くことない">） <a id="download" download="harigami.png">ダウンロード</a><br>
+    「<input id="mushoku" value="無職">」（<input id="moukaku" value="もう書くことない">） <input type="button" value="ダウンロード（画像）" onclick="png()"> <input type="button" value="ダウンロード（pdf）" onclick="pdf();"><br>
     <canvas id="canvas" width="4093" height="2894" style="width: 60%"></canvas>
     <script>
         let canvas = document.getElementById("canvas");
@@ -99,10 +100,22 @@
                 f();
             }
         }, 500);
+        let imguri = "";
         function f() {
             let base64 = canvas.toDataURL("image/png");
-            document.getElementById("download").href = base64;
+            imguri = base64;
         }
-    </script>
+        function png(){
+            let a = document.createElement("a");
+            a.setAttribute("download", "harigami.png");
+            a.setAttribute("href", imguri);
+            a.click();
+        }
+        function pdf(){
+            let doc = new jspdf.jsPDF('l', 'mm', [297, 210]);
+            doc.addImage(imguri, "png", 0, 0, 297, 210);
+            doc.save("harigami.pdf");
+        }
+        </script>
 </body>
 </html>
